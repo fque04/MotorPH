@@ -1,4 +1,4 @@
-package motorph;
+package motorph; 
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -43,7 +43,8 @@ public class MotorPH {
                 calculateSalaryBasedOnHoursWorked();
                 break;
             case 4:
-                viewEmployeeAttendance();
+                EmployeeAttendance.viewEmployeeAttendance(EMPLOYEE_ATTENDANCE_CSV_FILE_PATH);
+                offerReturnOption();
                 break;
             default:
                 System.out.println("Invalid option. Please try again.");
@@ -113,18 +114,6 @@ public class MotorPH {
     public static void calculateSalaryBasedOnHoursWorked() {
         System.out.println("Salary Calculation based on Hours Worked");
         // Implement salary calculation based on hours worked logic
-    }
-
-    public static void viewEmployeeAttendance() {
-        System.out.println("Employee Attendance Records:");
-        Map<Integer, String[]> employeeAttendance = loadDataFromFile(EMPLOYEE_ATTENDANCE_CSV_FILE_PATH);
-        for (String[] attendanceRecord : employeeAttendance.values()) {
-            for (String data : attendanceRecord) {
-                System.out.print(data + " ");
-            }
-            System.out.println();
-        }
-        offerReturnOption();
     }
 
     public static void offerReturnOption() {
