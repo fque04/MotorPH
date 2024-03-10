@@ -1,17 +1,10 @@
-package motorph; 
+package motorph;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class MotorPH {
 
     private static final String EMPLOYEE_DATA_CSV_FILE_PATH = "C:\\Users\\My PC\\OneDrive\\Documents\\NetBeansProjects\\MotorPH\\src\\motorph\\EmployeeData.csv";
-    private static final String EMPLOYEE_ATTENDANCE_CSV_FILE_PATH = "C:\\Users\\My PC\\OneDrive\\Documents\\NetBeansProjects\\MotorPH\\src\\motorph\\EmployeeAttendance.csv";
-    private static final String DEFAULT_PASSWORD = "motorph";
 
     public static void main(String[] args) {
         displayMainMenu();
@@ -34,7 +27,7 @@ public class MotorPH {
 
         switch (choice) {
             case 1:
-                authenticateEmployee();
+                authenticateEmployeeAndDisplayRecords();
                 break;
             case 2:
                 calculateNetSalary();
@@ -43,8 +36,7 @@ public class MotorPH {
                 calculateSalaryBasedOnHoursWorked();
                 break;
             case 4:
-                EmployeeAttendance.viewEmployeeAttendance(EMPLOYEE_ATTENDANCE_CSV_FILE_PATH);
-                offerReturnOption();
+                viewEmployeeAttendance();
                 break;
             default:
                 System.out.println("Invalid option. Please try again.");
@@ -54,66 +46,50 @@ public class MotorPH {
         input.close();
     }
 
-    public static void authenticateEmployee() {
+    public static void authenticateEmployeeAndDisplayRecords() {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter your employee number:");
         int employeeNumber = Integer.parseInt(input.nextLine());
         System.out.println("Enter your password:");
         String password = input.nextLine();
 
-        if (isValidEmployee(employeeNumber, password)) {
+        if (EmployeeData.isValidEmployee(employeeNumber, password)) {
             System.out.println("Authentication successful!");
-            displayEmployeeData(employeeNumber);
+            EmployeeData.displayEmployeeData(employeeNumber);
+            offerReturnOption();
         } else {
             System.out.println("Invalid employee number or password.");
             displayMainMenu();
         }
     }
 
-    public static boolean isValidEmployee(int employeeNumber, String password) {
-        return password.equals(DEFAULT_PASSWORD); // Simple authentication for demonstration
-    }
-
-    public static void displayEmployeeData(int employeeNumber) {
-        Map<Integer, String[]> employeeData = loadDataFromFile(EMPLOYEE_DATA_CSV_FILE_PATH);
-        String[] data = employeeData.get(employeeNumber);
-        if (data != null) {
-            System.out.println("Employee Number: " + data[0]);
-            System.out.println("Last Name: " + data[1]);
-            System.out.println("First Name: " + data[2]);
-            System.out.println("Position: " + data[3]); // Assuming position is in the 13th column
-            // Display other relevant information as needed
-            offerReturnOption();
-        } else {
-            System.out.println("Employee data not found for employee number: " + employeeNumber);
-            displayMainMenu();
-        }
-    }
-
-    public static Map<Integer, String[]> loadDataFromFile(String filePath) {
-        Map<Integer, String[]> employeeData = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                int employeeNumber = Integer.parseInt(parts[0].trim()); // Assuming empNo is in the first column
-                employeeData.put(employeeNumber, parts);
-            }
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Error reading data from file: " + e.getMessage());
-        }
-        return employeeData;
-    }
-
     public static void calculateNetSalary() {
         System.out.println("Net Salary Calculation");
         // Implement net salary calculation logic
+        offerReturnOption();
     }
 
     public static void calculateSalaryBasedOnHoursWorked() {
         System.out.println("Salary Calculation based on Hours Worked");
         // Implement salary calculation based on hours worked logic
+        offerReturnOption();
+    }
+
+    public static void viewEmployeeAttendance() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter your employee number:");
+        int employeeNumber = Integer.parseInt(input.nextLine());
+        System.out.println("Enter your password:");
+        String password = input.nextLine();
+
+        if (EmployeeAttendance.isValidEmployee(employeeNumber, password)) {
+            System.out.println("Authentication successful!");
+            EmployeeAttendance.viewEmployeeAttendance(employeeNumber);
+            offerReturnOption();
+        } else {
+            System.out.println("Invalid employee number or password.");
+            displayMainMenu();
+        }
     }
 
     public static void offerReturnOption() {
@@ -124,6 +100,7 @@ public class MotorPH {
             displayMainMenu();
         } else if (choice.equalsIgnoreCase("exit")) {
             System.out.println("Exiting MotorPH Payroll. Goodbye!");
+            System.exit(0);
         } else {
             System.out.println("Invalid option. Returning to the main menu.");
             displayMainMenu();
